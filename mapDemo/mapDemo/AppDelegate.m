@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <MAMapKit/MAMapKit.h>
 
 @interface AppDelegate ()
 
@@ -20,6 +21,7 @@
     
     //key  6eeb79dc7c6c09fba0432494c4bb6ce4
     
+    [MAMapServices sharedServices].apiKey=@"6eeb79dc7c6c09fba0432494c4bb6ce4";
     
     return YES;
 }

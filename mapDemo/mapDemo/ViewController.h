@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MAMapKit/MAMapKit.h>
+@interface ViewController : UIViewController<MAMapViewDelegate>
 
-@interface ViewController : UIViewController
+@property(nonatomic,strong)MAMapView *mapView;//地图承载视图
 
+@property(nonatomic,strong)MAPointAnnotation *pointAnnotation;//大头针
 
 @end
 

@@ -63,6 +63,16 @@
     }
     NSString *result = [NSString stringWithFormat:@"%@ \n %@ %@", strCount, strSuggestion,strPoi];
     NSLog(@"Place:== %@", result);
+    
+    //搜索结束后添加一个大头针到该位置
+    AMapPOI *p=response.pois.firstObject;
+    AMapGeoPoint *point=p.location;
+    MAPointAnnotation *addPointAnnotation=[[MAPointAnnotation alloc]init];
+    addPointAnnotation.title=@"昌宁大厦";
+    addPointAnnotation.subtitle=@"丰台区星火路1号";
+    addPointAnnotation.coordinate=CLLocationCoordinate2DMake(point.latitude, point.longitude);
+    [_mapView addAnnotation:addPointAnnotation];
+    
 }
 
 

@@ -17,5 +17,9 @@
 
 @property(nonatomic,strong)AMapSearchAPI *search;//搜索
 
+@property(nonatomic,strong)AMapGeoPoint *origin;//起点
+
+@property(nonatomic,strong)AMapGeoPoint *destination;//终点
+
 @end
 

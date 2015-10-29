@@ -41,18 +41,8 @@
     reqest.keywords=@"昌宁大厦";
     reqest.city=@"北京";
     reqest.requireExtension=YES;//返回详细信息，较废流量
-    [_search AMapPOIKeywordsSearch:reqest];//开始查询
     
- 
-//    构造AMapDrivingRouteSearchRequest对象，设置驾车路径规划请求参数
-//    AMapDrivingRouteSearchRequest *request = [[AMapDrivingRouteSearchRequest alloc] init];
-//    request.origin = [AMapGeoPoint locationWithLatitude:39.994949 longitude:116.447265];
-//    request.destination = [AMapGeoPoint locationWithLatitude:39.990459 longitude:116.481476];
-//    request.strategy = 2;//距离优先
-//    request.requireExtension = YES;
-//    
-//    //发起路径搜索
-//    [_search AMapDrivingRouteSearch: request];
+    [_search AMapPOIKeywordsSearch:reqest];//开始查询
     
 }
 
@@ -63,8 +53,10 @@
         return;
     }
     
-    NSString *rote=[NSString stringWithFormat:@"%@",response.route];
-    NSLog(@"路径优化=====%@",rote);
+    AMapRoute *rote=response.route;
+    
+    
+    
 }
 
 //搜索POI函数回调
@@ -77,14 +69,14 @@
     }
     
     //通过AMapPlaceSearchResponse对象处理搜索结果
-    NSString *strCount = [NSString stringWithFormat:@"count: %ld",response.count];
-    NSString *strSuggestion = [NSString stringWithFormat:@"Suggestion: %@",response.suggestion];//关键字建议列表和城市列表
-    NSString *strPoi = @"";
-    for (AMapPOI *p in response.pois) {
-        strPoi = [NSString stringWithFormat:@"%@\nname: %@", strPoi, p.name];
-    }
-    NSString *result = [NSString stringWithFormat:@"%@ \n %@ %@", strCount, strSuggestion,strPoi];
-    NSLog(@"Place:== %@", result);
+//    NSString *strCount = [NSString stringWithFormat:@"count: %ld",response.count];
+//    NSString *strSuggestion = [NSString stringWithFormat:@"Suggestion: %@",response.suggestion];//关键字建议列表和城市列表
+//    NSString *strPoi = @"";
+//    for (AMapPOI *p in response.pois) {
+//        strPoi = [NSString stringWithFormat:@"%@\nname: %@", strPoi, p.name];
+//    }
+//    NSString *result = [NSString stringWithFormat:@"%@ \n %@ %@", strCount, strSuggestion,strPoi];
+//    NSLog(@"Place:== %@", result);
     
     [self createMAPointAnnotationOnTheEnd:response];//在搜索结果处添加一个大头针
     
@@ -106,6 +98,7 @@
     [_mapView addAnnotation:addPointAnnotation];
 }
 
+//开始驾驶路径规划查询
 -(void)startDrivingRouteSearchRequest{
     
     AMapDrivingRouteSearchRequest *driveRequest=[[AMapDrivingRouteSearchRequest alloc]init];

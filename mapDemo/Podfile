@@ -1,5 +1,6 @@
 platform :ios ,'7.0'
 pod 'AFNetworking','~>2.0'
-pod 'AMap3DMap'
+#pod 'AMap3DMap'
+pod 'AMap2DMap'
 pod 'AMapSearch'
-
+#pod 'AMapNavi'#与AMap3DMap  AMap2DMap 冲突  驾驶路径规划也用不到这个框架。可见版本更新介绍。

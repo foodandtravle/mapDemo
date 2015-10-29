@@ -41,7 +41,21 @@
     reqest.keywords=@"昌宁大厦";
     reqest.city=@"北京";
     reqest.requireExtension=YES;//返回详细信息，较废流量
+    
     [_search AMapPOIKeywordsSearch:reqest];//开始查询
+    
+}
+
+//路径规划回调函数
+-(void)onRouteSearchDone:(AMapRouteSearchBaseRequest *)request response:(AMapRouteSearchResponse *)response{
+    
+    if (!response.route) {
+        return;
+    }
+    
+    AMapRoute *rote=response.route;
+    
+    
     
 }
 
@@ -55,26 +69,46 @@
     }
     
     //通过AMapPlaceSearchResponse对象处理搜索结果
-    NSString *strCount = [NSString stringWithFormat:@"count: %ld",response.count];
-    NSString *strSuggestion = [NSString stringWithFormat:@"Suggestion: %@",response.suggestion];//关键字建议列表和城市列表
-    NSString *strPoi = @"";
-    for (AMapPOI *p in response.pois) {
-        strPoi = [NSString stringWithFormat:@"%@\nname: %@", strPoi, p.name];
-    }
-    NSString *result = [NSString stringWithFormat:@"%@ \n %@ %@", strCount, strSuggestion,strPoi];
-    NSLog(@"Place:== %@", result);
+//    NSString *strCount = [NSString stringWithFormat:@"count: %ld",response.count];
+//    NSString *strSuggestion = [NSString stringWithFormat:@"Suggestion: %@",response.suggestion];//关键字建议列表和城市列表
+//    NSString *strPoi = @"";
+//    for (AMapPOI *p in response.pois) {
+//        strPoi = [NSString stringWithFormat:@"%@\nname: %@", strPoi, p.name];
+//    }
+//    NSString *result = [NSString stringWithFormat:@"%@ \n %@ %@", strCount, strSuggestion,strPoi];
+//    NSLog(@"Place:== %@", result);
     
-    //搜索结束后添加一个大头针到该位置
+    [self createMAPointAnnotationOnTheEnd:response];//在搜索结果处添加一个大头针
+    
+    AMapPOI *p=response.pois.firstObject;
+    _destination=p.location;
+    
+    [self startDrivingRouteSearchRequest];//开始搜索
+}
+
+//搜索结束后添加一个大头针到该位置
+-(void)createMAPointAnnotationOnTheEnd:(AMapPOISearchResponse *)response{
+
     AMapPOI *p=response.pois.firstObject;
     AMapGeoPoint *point=p.location;
     MAPointAnnotation *addPointAnnotation=[[MAPointAnnotation alloc]init];
-    addPointAnnotation.title=@"昌宁大厦";
-    addPointAnnotation.subtitle=@"丰台区星火路1号";
+    addPointAnnotation.title=p.name;
+    addPointAnnotation.subtitle=p.address;
     addPointAnnotation.coordinate=CLLocationCoordinate2DMake(point.latitude, point.longitude);
     [_mapView addAnnotation:addPointAnnotation];
-    
 }
 
+//开始驾驶路径规划查询
+-(void)startDrivingRouteSearchRequest{
+    
+    AMapDrivingRouteSearchRequest *driveRequest=[[AMapDrivingRouteSearchRequest alloc]init];
+    driveRequest.requireExtension=YES;
+    driveRequest.strategy=2;//距离优先
+    driveRequest.origin=_origin;
+    driveRequest.destination=_destination;
+    
+    [_search AMapDrivingRouteSearch:driveRequest];
+}
 
 -(void)viewWillAppear:(BOOL)animated{
     
@@ -123,6 +157,7 @@ updatingLocation:(BOOL)updatingLocation{
         _pointAnnotation.coordinate=userLocation.coordinate;
         //取出当前位置的坐标
         //NSLog(@"latitude : %f,longitude: %f",userLocation.coordinate.latitude,userLocation.coordinate.longitude);
+        _origin=[AMapGeoPoint locationWithLatitude:userLocation.coordinate.latitude longitude:userLocation.coordinate.longitude];
     }
 }
 
